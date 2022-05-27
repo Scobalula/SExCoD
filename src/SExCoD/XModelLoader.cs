@@ -316,8 +316,8 @@ namespace SExCoD
                         }
 
                         //// Ensure we're normalized
-                        //foreach (var weight in newVertex.Weights)
-                        //    weight.BoneWeight /= weightSum;
+                        foreach (var weight in newVertex.Weights)
+                            weight.BoneWeight /= weightSum;
 
                         mesh.AddVertex(newVertex);
                         existing.Add((mesh, faceIndex));

@@ -18,6 +18,10 @@ Then you can drag and drop files onto the exe to convert them.
 
 A lot of work and testing has gone into SExCoD, but if you find a bug, feel free to open an issue with as much information as possible including files used and any other information.
 
+❤️ You can also join my Discord to report issues or get general help ❤️
+
+[![Join my Discord](https://discordapp.com/api/guilds/719503756810649640/widget.png?style=banner2)](https://discord.gg/RyqyThu)
+
 # Contributing
 
 Contributions are absolutely welcome, if you'd like to contribute code, then you can fork the repo and make edits, then open a PR, don't worry if you think your code isn't perfect or well documented, as we can make any edits we feel are necessary to bring it up to scratch!

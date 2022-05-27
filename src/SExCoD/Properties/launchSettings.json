@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SExCoD": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Prj\\VS\\SExCoD\\mw19_character_tanktopmara_pb.xmodel_bin\""
+    }
+  }
+}

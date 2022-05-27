@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SExCoD", "SExCoD.csproj", "{0B7DC850-FC79-414D-A925-B2B2C6DA3439}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CallOfFile", "..\..\..\CallOfFile\src\CallOfFile\CallOfFile.csproj", "{6C22BD99-BD0F-4138-B5A2-9FBA818A3C5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SELib", "..\SELib\SELib.csproj", "{5674F85C-0AC0-492D-8B5A-A87956FF168A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B7DC850-FC79-414D-A925-B2B2C6DA3439}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B7DC850-FC79-414D-A925-B2B2C6DA3439}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B7DC850-FC79-414D-A925-B2B2C6DA3439}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B7DC850-FC79-414D-A925-B2B2C6DA3439}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C22BD99-BD0F-4138-B5A2-9FBA818A3C5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C22BD99-BD0F-4138-B5A2-9FBA818A3C5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C22BD99-BD0F-4138-B5A2-9FBA818A3C5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C22BD99-BD0F-4138-B5A2-9FBA818A3C5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5674F85C-0AC0-492D-8B5A-A87956FF168A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5674F85C-0AC0-492D-8B5A-A87956FF168A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5674F85C-0AC0-492D-8B5A-A87956FF168A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5674F85C-0AC0-492D-8B5A-A87956FF168A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A25EA548-52E0-4A7E-8964-977AB45AE857}
+	EndGlobalSection
+EndGlobal

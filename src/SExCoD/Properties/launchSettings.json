@@ -2,7 +2,7 @@
   "profiles": {
     "SExCoD": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Prj\\VS\\SExCoD\\mw19_character_tanktopmara_pb.xmodel_bin\""
+      "commandLineArgs": "\"D:\\SteamLibrary\\steamapps\\common\\Call of Duty Black Ops III\\model_export\\weapons_t7\\ap9_gremlin\\wpn_t7_smg_ap9_skeleton.XMODEL_BIN\" \"D:\\SteamLibrary\\steamapps\\common\\Call of Duty Black Ops III\\xanim_export\\t7_viewmodels\\ap9\\vm_ap9_grip_reload_empty.XANIM_BIN\""
     }
   }
 }

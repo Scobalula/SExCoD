@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -247,21 +248,21 @@ namespace SELib
         /// <summary>
         /// The position of the vertex
         /// </summary>
-        public System.Numerics.Vector3 Position { get; set; }
+        public Vector3 Position { get; set; }
 
         /// <summary>
         /// The uv sets for this vertex
         /// </summary>
-        public List<System.Numerics.Vector2> UVSets { get; set; }
+        public List<Vector2> UVSets { get; set; }
 
         /// <summary>
         /// The vertex normal
         /// </summary>
-        public System.Numerics.Vector3 VertexNormal { get; set; }
+        public Vector3 VertexNormal { get; set; }
         /// <summary>
         /// The vertex coloring
         /// </summary>
-        public Color VertexColor { get; set; }
+        public Vector4 VertexColor { get; set; }
 
         /// <summary>
         /// A list of skin weights for this vertex
@@ -273,10 +274,10 @@ namespace SELib
         /// </summary>
         public SEModelVertex()
         {
-            Position = System.Numerics.Vector3.Zero;
-            UVSets = new List<System.Numerics.Vector2>();
-            VertexNormal = System.Numerics.Vector3.Zero;
-            VertexColor = Color.White;
+            Position = Vector3.Zero;
+            UVSets = new List<Vector2>();
+            VertexNormal = Vector3.Zero;
+            VertexColor = Vector4.One;
             Weights = new List<SEModelWeight>();
         }
     }
@@ -488,9 +489,9 @@ namespace SELib
                                 HasUVSet = true;
                             if (Vertex.Weights.Count > 0)
                                 HasWeights = true;
-                            if (Vertex.VertexColor != Color.White)
+                            if (Vertex.VertexColor != Vector4.One)
                                 HasColors = true;
-                            if (Vertex.VertexNormal != System.Numerics.Vector3.Zero)
+                            if (Vertex.VertexNormal != Vector3.Zero)
                                 HasNormals = true;
 
                             // Check to end
@@ -632,7 +633,7 @@ namespace SELib
                     {
                         for (int i = 0; i < MatIndiciesCount; i++)
                         {
-                            var Layer = (i < Vertex.UVSets.Count) ? Vertex.UVSets[i] : System.Numerics.Vector2.Zero;
+                            var Layer = (i < Vertex.UVSets.Count) ? Vertex.UVSets[i] : Vector2.Zero;
 
                             // Write it
                             writeFile.Write(Layer.X);
@@ -656,10 +657,10 @@ namespace SELib
                     {
                         foreach (var Vertex in Mesh.Verticies)
                         {
-                            writeFile.Write((byte)Vertex.VertexColor.R);
-                            writeFile.Write((byte)Vertex.VertexColor.G);
-                            writeFile.Write((byte)Vertex.VertexColor.B);
-                            writeFile.Write((byte)Vertex.VertexColor.A);
+                            writeFile.Write((byte)(Vertex.VertexColor.X / 255.0f));
+                            writeFile.Write((byte)(Vertex.VertexColor.Y / 255.0f));
+                            writeFile.Write((byte)(Vertex.VertexColor.Z / 255.0f));
+                            writeFile.Write((byte)(Vertex.VertexColor.W / 255.0f));
                         }
                     }
 
@@ -883,7 +884,11 @@ namespace SELib
                     {
                         // Loop and read colors
                         for (int v = 0; v < VertexCount; v++)
-                            mesh.Verticies[v].VertexColor = new Color(readFile.ReadByte(), readFile.ReadByte(), readFile.ReadByte(), readFile.ReadByte());
+                            mesh.Verticies[v].VertexColor = new(
+                                readFile.ReadByte() / 255.0f,
+                                readFile.ReadByte() / 255.0f,
+                                readFile.ReadByte() / 255.0f,
+                                readFile.ReadByte() / 255.0f);
                     }
 
                     // Read weights

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using SELib;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace SExCoD
@@ -17,21 +18,58 @@ namespace SExCoD
 
             var filesProcessed = 0;
             var cmp = StringComparison.CurrentCultureIgnoreCase;
+            var animModelFile = string.Empty;
+            SEModel? animModel = null;
+
+            // A first pass to find the first instance of an XMODEL for use in XAnims
+            foreach (var file in args)
+            {
+                var extension = Path.GetExtension(file);
+
+                if (!extension.Equals(".xmodel_bin", cmp) && !extension.Equals(".xmodel_export", cmp))
+                    continue;
+
+                animModelFile = file;
+            }
+
+
             foreach (var file in args)
             {
                 try
                 {
                     var extension = Path.GetExtension(file);
 
-                    if (!extension.Equals(".xmodel_bin", cmp) && !extension.Equals(".xmodel_export", cmp))
-                        continue;
+                    if (extension.Equals(".xmodel_bin", cmp) || !extension.Equals(".xmodel_export", cmp))
+                    {
+                        Console.WriteLine($"| Processing: {Path.GetFileName(file)}...");
+                        var watch = Stopwatch.StartNew();
+                        filesProcessed++;
+                        var model = XModelLoader.Read(file);
+                        model.Write(Path.ChangeExtension(file, ".semodel"));
+                        Console.WriteLine($"| Processed: {Path.GetFileName(file)} in {watch.ElapsedMilliseconds / 1000.0f} seconds.");
+                    }
+                    else if (extension.Equals(".xanim_bin", cmp) || !extension.Equals(".xanim_export", cmp))
+                    {
+                        Console.WriteLine($"| Processing: {Path.GetFileName(file)}...");
+                        var watch = Stopwatch.StartNew();
+                        filesProcessed++;
 
-                    Console.WriteLine($"| Processing: {Path.GetFileName(file)}...");
-                    var watch = Stopwatch.StartNew();
-                    filesProcessed++;
-                    var model = XModelLoader.Read(file);
-                    model.Write(Path.ChangeExtension(file, ".semodel"));
-                    Console.WriteLine($"| Processed: {Path.GetFileName(file)} in {watch.ElapsedMilliseconds / 1000.0f} seconds.");
+                        // Ensure we have a main anim file, lazy loading as there is no point in reading 
+                        // until we actually have an xanim.
+                        if(animModel == null)
+                        {
+                            if (string.IsNullOrWhiteSpace(animModelFile))
+                                throw new Exception("No animation model provided.");
+                            if (!File.Exists(animModelFile))
+                                throw new Exception("The provided animation model does not exist.");
+
+                            animModel = XModelLoader.Read(animModelFile, true);
+                        }
+
+                        var anim = XAnimLoader.Read(file, animModel);
+                        anim.Write(Path.ChangeExtension(file, ".seanim"));
+                        Console.WriteLine($"| Processed: {Path.GetFileName(file)} in {watch.ElapsedMilliseconds / 1000.0f} seconds.");
+                    }
                 }
                 catch(Exception e)
                 {

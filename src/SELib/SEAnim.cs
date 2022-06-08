@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -67,7 +68,7 @@ namespace SELib
     /// <summary>
     /// Contains information for a specific keyframe
     /// </summary>
-    public class SEAnimFrame
+    public class SEAnimFrame<T>
     {
         /// <summary>
         /// Get or set the frame of this animation key
@@ -76,7 +77,7 @@ namespace SELib
         /// <summary>
         /// Get or set the frame data for this animation key
         /// </summary>
-        public KeyData Data { get; set; }
+        public T Data { get; set; }
     }
 
     #endregion
@@ -92,19 +93,19 @@ namespace SELib
         /// <summary>
         /// A list of animation keys, by bone, for positions
         /// </summary>
-        public Dictionary<string, List<SEAnimFrame>> AnimationPositionKeys { get; private set; }
+        public Dictionary<string, List<SEAnimFrame<Vector3>>> AnimationPositionKeys { get; private set; }
         /// <summary>
         /// A list of animation keys, by bone, for rotations
         /// </summary>
-        public Dictionary<string, List<SEAnimFrame>> AnimationRotationKeys { get; private set; }
+        public Dictionary<string, List<SEAnimFrame<Quaternion>>> AnimationRotationKeys { get; private set; }
         /// <summary>
         /// A list of animation keys, by bone, for scales
         /// </summary>
-        public Dictionary<string, List<SEAnimFrame>> AnimationScaleKeys { get; private set; }
+        public Dictionary<string, List<SEAnimFrame<Vector3>>> AnimationScaleKeys { get; private set; }
         /// <summary>
         /// A list of animation keys, for notetracks
         /// </summary>
-        public Dictionary<string, List<SEAnimFrame>> AnimationNotetracks { get; private set; }
+        public Dictionary<string, List<SEAnimFrame<object>>> AnimationNotetracks { get; private set; }
         /// <summary>
         /// A list of animation modifiers, by bone
         /// </summary>
@@ -155,10 +156,10 @@ namespace SELib
         public SEAnim()
         {
             // Setup defaults
-            AnimationPositionKeys = new Dictionary<string, List<SEAnimFrame>>();
-            AnimationRotationKeys = new Dictionary<string, List<SEAnimFrame>>();
-            AnimationScaleKeys = new Dictionary<string, List<SEAnimFrame>>();
-            AnimationNotetracks = new Dictionary<string, List<SEAnimFrame>>();
+            AnimationPositionKeys = new();
+            AnimationRotationKeys = new();
+            AnimationScaleKeys = new();
+            AnimationNotetracks = new();
             AnimationBoneModifiers = new Dictionary<string, AnimationType>();
             // Default type
             AnimType = AnimationType.Absolute;
@@ -787,10 +788,10 @@ namespace SELib
                                     else
                                     {
                                         // Write as int
-                                        writeFile.Write((int)AnimationPositionKeys[Bone].Count);
+                                        writeFile.Write(AnimationPositionKeys[Bone].Count);
                                     }
                                     // Output keys
-                                    foreach (SEAnimFrame Key in AnimationPositionKeys[Bone])
+                                    foreach (var Key in AnimationPositionKeys[Bone])
                                     {
                                         // Output frame number based on frame count
                                         if (FrameCountBuffer <= 0xFF)
@@ -806,20 +807,20 @@ namespace SELib
                                         else
                                         {
                                             // Write as int
-                                            writeFile.Write((int)Key.Frame);
+                                            writeFile.Write(Key.Frame);
                                         }
                                         // Output the vector
                                         if (HighPrecision)
                                         {
-                                            writeFile.Write((double)((Vector3)Key.Data).X);
-                                            writeFile.Write((double)((Vector3)Key.Data).Y);
-                                            writeFile.Write((double)((Vector3)Key.Data).Z);
+                                            writeFile.Write((double)Key.Data.X);
+                                            writeFile.Write((double)Key.Data.Y);
+                                            writeFile.Write((double)Key.Data.Z);
                                         }
                                         else
                                         {
-                                            writeFile.Write((float)((Vector3)Key.Data).X);
-                                            writeFile.Write((float)((Vector3)Key.Data).Y);
-                                            writeFile.Write((float)((Vector3)Key.Data).Z);
+                                            writeFile.Write(Key.Data.X);
+                                            writeFile.Write(Key.Data.Y);
+                                            writeFile.Write(Key.Data.Z);
                                         }
                                     }
                                 }
@@ -839,7 +840,7 @@ namespace SELib
                                     else
                                     {
                                         // Write as int
-                                        writeFile.Write((int)0x0);
+                                        writeFile.Write(0x0);
                                     }
                                 }
                             }
@@ -870,10 +871,10 @@ namespace SELib
                                     else
                                     {
                                         // Write as int
-                                        writeFile.Write((int)AnimationRotationKeys[Bone].Count);
+                                        writeFile.Write(AnimationRotationKeys[Bone].Count);
                                     }
                                     // Output keys
-                                    foreach (SEAnimFrame Key in AnimationRotationKeys[Bone])
+                                    foreach (var Key in AnimationRotationKeys[Bone])
                                     {
                                         // Output frame number based on frame count
                                         if (FrameCountBuffer <= 0xFF)
@@ -889,22 +890,22 @@ namespace SELib
                                         else
                                         {
                                             // Write as int
-                                            writeFile.Write((int)Key.Frame);
+                                            writeFile.Write(Key.Frame);
                                         }
                                         // Output the quat
                                         if (HighPrecision)
                                         {
-                                            writeFile.Write((double)((Quaternion)Key.Data).X);
-                                            writeFile.Write((double)((Quaternion)Key.Data).Y);
-                                            writeFile.Write((double)((Quaternion)Key.Data).Z);
-                                            writeFile.Write((double)((Quaternion)Key.Data).W);
+                                            writeFile.Write((double)Key.Data.X);
+                                            writeFile.Write((double)Key.Data.Y);
+                                            writeFile.Write((double)Key.Data.Z);
+                                            writeFile.Write((double)Key.Data.W);
                                         }
                                         else
                                         {
-                                            writeFile.Write((float)((Quaternion)Key.Data).X);
-                                            writeFile.Write((float)((Quaternion)Key.Data).Y);
-                                            writeFile.Write((float)((Quaternion)Key.Data).Z);
-                                            writeFile.Write((float)((Quaternion)Key.Data).W);
+                                            writeFile.Write(Key.Data.X);
+                                            writeFile.Write(Key.Data.Y);
+                                            writeFile.Write(Key.Data.Z);
+                                            writeFile.Write(Key.Data.W);
                                         }
                                     }
                                 }
@@ -924,7 +925,7 @@ namespace SELib
                                     else
                                     {
                                         // Write as int
-                                        writeFile.Write((int)0x0);
+                                        writeFile.Write(0x0);
                                     }
                                 }
                             }
@@ -955,10 +956,10 @@ namespace SELib
                                     else
                                     {
                                         // Write as int
-                                        writeFile.Write((int)AnimationScaleKeys[Bone].Count);
+                                        writeFile.Write(AnimationScaleKeys[Bone].Count);
                                     }
                                     // Output keys
-                                    foreach (SEAnimFrame Key in AnimationScaleKeys[Bone])
+                                    foreach (var Key in AnimationScaleKeys[Bone])
                                     {
                                         // Output frame number based on frame count
                                         if (FrameCountBuffer <= 0xFF)
@@ -974,20 +975,20 @@ namespace SELib
                                         else
                                         {
                                             // Write as int
-                                            writeFile.Write((int)Key.Frame);
+                                            writeFile.Write(Key.Frame);
                                         }
                                         // Output the vector
                                         if (HighPrecision)
                                         {
-                                            writeFile.Write((double)((Vector3)Key.Data).X);
-                                            writeFile.Write((double)((Vector3)Key.Data).Y);
-                                            writeFile.Write((double)((Vector3)Key.Data).Z);
+                                            writeFile.Write((double)Key.Data.X);
+                                            writeFile.Write((double)Key.Data.Y);
+                                            writeFile.Write((double)Key.Data.Z);
                                         }
                                         else
                                         {
-                                            writeFile.Write((float)((Vector3)Key.Data).X);
-                                            writeFile.Write((float)((Vector3)Key.Data).Y);
-                                            writeFile.Write((float)((Vector3)Key.Data).Z);
+                                            writeFile.Write(Key.Data.X);
+                                            writeFile.Write(Key.Data.Y);
+                                            writeFile.Write(Key.Data.Z);
                                         }
                                     }
                                 }
@@ -1007,7 +1008,7 @@ namespace SELib
                                     else
                                     {
                                         // Write as int
-                                        writeFile.Write((int)0x0);
+                                        writeFile.Write(0x0);
                                     }
                                 }
                             }
@@ -1020,10 +1021,10 @@ namespace SELib
                 if (AnimationNotetracks.Count > 0)
                 {
                     // We have notifications
-                    foreach (KeyValuePair<string, List<SEAnimFrame>> Note in AnimationNotetracks)
+                    foreach (var Note in AnimationNotetracks)
                     {
                         // Write them
-                        foreach (SEAnimFrame Key in Note.Value)
+                        foreach (var Key in Note.Value)
                         {
                             // Write the frame itself based on framecount
                             if (FrameCountBuffer <= 0xFF)
@@ -1078,10 +1079,10 @@ namespace SELib
             if (!AnimationPositionKeys.ContainsKey(Bone))
             {
                 // Set it up
-                AnimationPositionKeys.Add(Bone, new List<SEAnimFrame>());
+                AnimationPositionKeys.Add(Bone, new());
             }
             // Add the key itself
-            AnimationPositionKeys[Bone].Add(new SEAnimFrame() { Frame = Frame, Data = new Vector3() { X = X, Y = Y, Z = Z } });
+            AnimationPositionKeys[Bone].Add(new() { Frame = Frame, Data = new Vector3() { X = (float)X, Y = (float)Y, Z = (float)Z } });
         }
 
         /// <summary>
@@ -1099,10 +1100,10 @@ namespace SELib
             if (!AnimationRotationKeys.ContainsKey(Bone))
             {
                 // Set it up
-                AnimationRotationKeys.Add(Bone, new List<SEAnimFrame>());
+                AnimationRotationKeys.Add(Bone, new());
             }
             // Add the key itself
-            AnimationRotationKeys[Bone].Add(new SEAnimFrame() { Frame = Frame, Data = new Quaternion() { X = X, Y = Y, Z = Z, W = W } });
+            AnimationRotationKeys[Bone].Add(new() { Frame = Frame, Data = new Quaternion() { X = (float)X, Y = (float)Y, Z = (float)Z, W = (float)W } });
         }
 
         /// <summary>
@@ -1119,10 +1120,10 @@ namespace SELib
             if (!AnimationScaleKeys.ContainsKey(Bone))
             {
                 // Set it up
-                AnimationScaleKeys.Add(Bone, new List<SEAnimFrame>());
+                AnimationScaleKeys.Add(Bone, new());
             }
             // Add the key itself
-            AnimationScaleKeys[Bone].Add(new SEAnimFrame() { Frame = Frame, Data = new Vector3() { X = X, Y = Y, Z = Z } });
+            AnimationScaleKeys[Bone].Add(new() { Frame = Frame, Data = new Vector3() { X = (float)X, Y = (float)Y, Z = (float)Z } });
         }
 
         /// <summary>
@@ -1136,10 +1137,10 @@ namespace SELib
             if (!AnimationNotetracks.ContainsKey(Notification))
             {
                 // Set it up
-                AnimationNotetracks.Add(Notification, new List<SEAnimFrame>());
+                AnimationNotetracks.Add(Notification, new());
             }
             // Add the key itself
-            AnimationNotetracks[Notification].Add(new SEAnimFrame() { Frame = Frame, Data = null });
+            AnimationNotetracks[Notification].Add(new() { Frame = Frame, Data = null });
         }
 
         /// <summary>
@@ -1339,7 +1340,7 @@ namespace SELib
             // The total count
             int TotalCount = 0;
             // Loop for all keys and add
-            foreach (List<SEAnimFrame> NotificationList in AnimationNotetracks.Values)
+            foreach (var NotificationList in AnimationNotetracks.Values)
             {
                 // Append
                 TotalCount += NotificationList.Count;
@@ -1358,37 +1359,37 @@ namespace SELib
             // We must iterate through all key types and compare the max keyed frame against the current max frame
             #region Key Iteration
 
-            foreach (List<SEAnimFrame> Frames in AnimationPositionKeys.Values)
+            foreach (var Frames in AnimationPositionKeys.Values)
             {
                 // Iterate
-                foreach (SEAnimFrame Frame in Frames)
+                foreach (var Frame in Frames)
                 {
                     // Compare
                     MaxFrame = Math.Max(MaxFrame, Frame.Frame);
                 }
             }
-            foreach (List<SEAnimFrame> Frames in AnimationRotationKeys.Values)
+            foreach (var Frames in AnimationRotationKeys.Values)
             {
                 // Iterate
-                foreach (SEAnimFrame Frame in Frames)
+                foreach (var Frame in Frames)
                 {
                     // Compare
                     MaxFrame = Math.Max(MaxFrame, Frame.Frame);
                 }
             }
-            foreach (List<SEAnimFrame> Frames in AnimationScaleKeys.Values)
+            foreach (var Frames in AnimationScaleKeys.Values)
             {
                 // Iterate
-                foreach (SEAnimFrame Frame in Frames)
+                foreach (var Frame in Frames)
                 {
                     // Compare
                     MaxFrame = Math.Max(MaxFrame, Frame.Frame);
                 }
             }
-            foreach (List<SEAnimFrame> Frames in AnimationNotetracks.Values)
+            foreach (var Frames in AnimationNotetracks.Values)
             {
                 // Iterate
-                foreach (SEAnimFrame Frame in Frames)
+                foreach (var Frame in Frames)
                 {
                     // Compare
                     MaxFrame = Math.Max(MaxFrame, Frame.Frame);

@@ -28,19 +28,21 @@ namespace SExCoD
         /// Handles reading a <see cref="SEModel"/> from an XMODEL.
         /// </summary>
         /// <param name="filePath">The file to read from.</param>
+        /// <param name="skeletonOnly">Whether or not to only read the skeleton.</param>
         /// <returns>A <see cref="SEModel"/> consumed from an XMODEL.</returns>
-        public static SEModel Read(string filePath)
+        public static SEModel Read(string filePath, bool skeletonOnly = false)
         {
             using var reader = TokenReader.CreateReader(filePath);
-            return Read(reader);
+            return Read(reader, skeletonOnly);
         }
 
         /// <summary>
         /// Handles reading a <see cref="SEModel"/> from an XMODEL.
         /// </summary>
         /// <param name="reader">The reader to read from.</param>
+        /// <param name="skeletonOnly">Whether or not to only read the skeleton.</param>
         /// <returns>A <see cref="SEModel"/> consumed from an XMODEL.</returns>
-        public static SEModel Read(TokenReader reader)
+        public static SEModel Read(TokenReader reader, bool skeletonOnly = false)
         {
             // First check that we have our version and model identifiers.
             // We don't bother checking version, if the data is good, we good.
@@ -126,6 +128,9 @@ namespace SExCoD
             }
 
             // Now we can build our SEModel list
+            // TODO: Moved SELib to System.Numerics
+            // so this can be done above without the need
+            // for temporary buffers.
             for (int i = 0; i < boneCount; i++)
             {
                 model.AddBone(
@@ -149,6 +154,9 @@ namespace SExCoD
                         boneScales[i].Y,
                         boneScales[i].Z));
             }
+
+            if (skeletonOnly)
+                return model;
 
             var vertCount = (int)nextToken.Cast<TokenDataUInt>(VertexCountNames).Value;
             var vertices = new List<TokenDataVector3>(vertCount);
